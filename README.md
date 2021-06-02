@@ -25,7 +25,7 @@ Set `FIREUP_CONFIG` environment variables to config json files. Example
   "storageBucket": "testing.appspot.com",
   "authDomain": "testing.firebaseapp.com",
   "databaseURL": "https://testing.firebaseio.com",
-  "serviceAccount": "./tiket-firebaseadmin-sa.json"
+  "serviceAccount": "./firebasadmin-sa.json"
 }
 ```
 
@@ -35,7 +35,7 @@ Set `FIREUP_CONFIG` environment variables to config json files. Example
 $ fireup upload --origin <file> --dest <path>
 
 # Example
-$ fireup upload --origin tiket.apk --dest apk/testing.apk
+$ fireup upload --origin some.apk --dest apk/testing.apk
 ```
 
 ### Delete

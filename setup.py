@@ -7,8 +7,8 @@ packages = setuptools.find_packages(include=['fireup', 'fireup.*'])
 print("Packages: {}".format(packages))
 
 setuptools.setup(
-    name="fireup",                     # This is the name of the package
-    version="0.0.2",                        # The initial release version
+    name="firebase-fireup",                     # This is the name of the package
+    version="0.0.3",                        # The initial release version
     author="Esa Firman",                     # Full name of the author
     description="Firebase Storage Uploader",
     long_description=long_description,      # Long description read from the the readme file
