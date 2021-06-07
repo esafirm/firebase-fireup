@@ -1,6 +1,5 @@
 from . import common
 
-import requests
 from firebase_admin import storage
 
 try:
@@ -28,7 +27,7 @@ class Storage:
             self.path = new_path
         return self
 
-    def put(self, file, token=None):
+    def put(self, file, chunk_size=None, token=None):
         # reset path
         path = self.path
         self.path = None
@@ -36,6 +35,7 @@ class Storage:
             file_object = open(file, 'rb')
         else:
             file_object = file
+
         request_ref = self.storage_bucket + "/o?name={0}".format(path)
         if token:
             headers = {"Authorization": "Firebase " + token}
@@ -44,6 +44,11 @@ class Storage:
             return request_object.json()
         else:
             blob = self.bucket.blob(path)
+
+            # Workaround for slow internet speed when uploading big file
+            if chunk_size:
+                blob._chunk_size = chunk_size * 1024 * 1024  # 5 MB
+
             if isinstance(file, str):
                 return blob.upload_from_filename(filename=file)
             else:

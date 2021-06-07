@@ -8,7 +8,7 @@ print("Packages: {}".format(packages))
 
 setuptools.setup(
     name="firebase-fireup",                     # This is the name of the package
-    version="0.0.4",                        # The initial release version
+    version="0.0.5",                        # The initial release version
     author="Esa Firman",                     # Full name of the author
     description="Firebase Storage Uploader",
     long_description=long_description,      # Long description read from the the readme file

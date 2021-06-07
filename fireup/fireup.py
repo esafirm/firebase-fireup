@@ -19,6 +19,7 @@ delete_parser.add_argument("--expire", dest="expire", type=int, help="Delete fil
 upload_parser = subparser.add_parser('upload', help="Upload file use --origin and --dest")
 upload_parser.add_argument("--origin", dest="origin", type=str, help="Origin file path. Ex: /home/test.apk")
 upload_parser.add_argument("--dest", dest="dest", type=str, help="Destination path. Ex: /apk/test.apk")
+upload_parser.add_argument("--chunk", dest="chunk", type=int, help="Optional. Chunk size in Mb")
 upload_parser.add_argument("--stdout", action="store_true", help="Return stdout mode")
 
 list_parser = subparser.add_parser('list', help="List files in --target dir")
@@ -58,7 +59,7 @@ class FireUp:
         if not return_stdout:
             print("Uploading {} to {}…".format(origin, dest))
 
-        self._storage.child(dest).put(origin)
+        self._storage.child(dest).put(origin, args.chunk)
         url = self.url(bucket_path=dest)
 
         print(url)
