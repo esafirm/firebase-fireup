@@ -8,7 +8,7 @@ print("Packages: {}".format(packages))
 
 setuptools.setup(
     name="firebase-fireup",                     # This is the name of the package
-    version="0.0.3",                        # The initial release version
+    version="0.0.4",                        # The initial release version
     author="Esa Firman",                     # Full name of the author
     description="Firebase Storage Uploader",
     long_description=long_description,      # Long description read from the the readme file
@@ -22,9 +22,8 @@ setuptools.setup(
     python_requires='>=3.6',                # Minimum version requirement of the package
     py_modules=["fireup"],             # Name of the python package
     install_requires=[
+        'firebase-admin==5.0.0',
         'requests==2.25.1',
-        'gcloud==0.17.0',
-        'oauth2client==3.0.0',
         'requests-toolbelt==0.9.1',
         'python-jwt==2.0.1'
     ],                     # Install other dependencies if any

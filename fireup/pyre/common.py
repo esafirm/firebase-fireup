@@ -1,5 +1,6 @@
 from requests.exceptions import HTTPError
 
+
 def raise_detailed_error(request_object):
     try:
         request_object.raise_for_status()
