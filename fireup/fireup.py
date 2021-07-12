@@ -42,6 +42,7 @@ class FireUp:
         url = self.url(bucket_path=dest)
 
         print(url)
+        return url
 
     def url(self, bucket_path):
         return self._storage.child('/').get_url(bucket_path)
@@ -68,12 +69,6 @@ class FireUp:
             print("{} deleted.".format(f.name))
 
 
-if IS_DEBUG:
-    print("")
-    print("=> Mode: {}".format(args))
-    print("")
-
-
 def main():
     parser = argparse.ArgumentParser(description="Firebase storage management tools")
 
@@ -96,6 +91,11 @@ def main():
                              help="List only files that modifier more than expire days")
 
     args = parser.parse_args()
+
+    if IS_DEBUG:
+        print("")
+        print("=> Mode: {}".format(args))
+        print("")
 
     fire = FireUp()
 
