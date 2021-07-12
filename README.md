@@ -56,6 +56,30 @@ $ fireup list --path <path> --expire <expire_in_days>
 $ fireup list --path /apk
 ```
 
+## Including in another script
+
+```python
+from fireup.fireup import FireUp
+
+fire = FireUp()
+fire.upload(origin="test.py", dest="script/test.py")
+```
+
+## Building
+
+Install the package locally
+
+```
+$ pip install <code_dir>
+```
+
+Building and upload to pypi
+
+```
+$ python setup.py sdist bdist_wheel
+$ twine upload dist/*
+```
+
 ## License
 
 MIT @ Esa Firman

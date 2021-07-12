@@ -7,27 +7,7 @@ from datetime import datetime
 
 # Manually change this before uploading
 IS_DEBUG = False
-
-parser = argparse.ArgumentParser(description="Firebase storage management tools")
-
-subparser = parser.add_subparsers(help="Sub commands", dest="command")
-
-delete_parser = subparser.add_parser('delete', help="Delete files in firebase storage")
-delete_parser.add_argument("--path", dest="path", type=str, help="Delete path")
-delete_parser.add_argument("--expire", dest="expire", type=int, help="Delete files with diff equal or more than expire")
-
-upload_parser = subparser.add_parser('upload', help="Upload file use --origin and --dest")
-upload_parser.add_argument("--origin", dest="origin", type=str, help="Origin file path. Ex: /home/test.apk")
-upload_parser.add_argument("--dest", dest="dest", type=str, help="Destination path. Ex: /apk/test.apk")
-upload_parser.add_argument("--chunk", dest="chunk", type=int, help="Optional. Chunk size in Mb")
-upload_parser.add_argument("--stdout", action="store_true", help="Return stdout mode")
-
-list_parser = subparser.add_parser('list', help="List files in --target dir")
-list_parser.add_argument("--path", dest="path", type=str, default="/", help="Path directory in Firebase storage")
-list_parser.add_argument("--expire", dest="expire", type=int,
-                         help="List only files that modifier more than expire days")
-
-args = parser.parse_args()
+DEFAULT_CHUNK_SIZE = 2  # in MB
 
 
 class FireUp:
@@ -54,12 +34,11 @@ class FireUp:
         firebase = pyreup.initialize_app(config)
         return firebase.storage()
 
-    def upload(self, origin, dest):
-        return_stdout = args.stdout
+    def upload(self, origin, dest, chunk=DEFAULT_CHUNK_SIZE, return_stdout=False):
         if not return_stdout:
-            print("Uploading {} to {}…".format(origin, dest))
+            print("Uploading {} to {}...".format(origin, dest))
 
-        self._storage.child(dest).put(origin, args.chunk)
+        self._storage.child(dest).put(origin, chunk)
         url = self.url(bucket_path=dest)
 
         print(url)
@@ -96,10 +75,32 @@ if IS_DEBUG:
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Firebase storage management tools")
+
+    subparser = parser.add_subparsers(help="Sub commands", dest="command")
+
+    delete_parser = subparser.add_parser('delete', help="Delete files in firebase storage")
+    delete_parser.add_argument("--path", dest="path", type=str, help="Delete path")
+    delete_parser.add_argument("--expire", dest="expire", type=int,
+                               help="Delete files with diff equal or more than expire")
+
+    upload_parser = subparser.add_parser('upload', help="Upload file use --origin and --dest")
+    upload_parser.add_argument("--origin", dest="origin", type=str, help="Origin file path. Ex: /home/test.apk")
+    upload_parser.add_argument("--dest", dest="dest", type=str, help="Destination path. Ex: /apk/test.apk")
+    upload_parser.add_argument("--chunk", dest="chunk", type=int, help="Optional. Chunk size in Mb")
+    upload_parser.add_argument("--stdout", action="store_true", help="Return stdout mode")
+
+    list_parser = subparser.add_parser('list', help="List files in --target dir")
+    list_parser.add_argument("--path", dest="path", type=str, default="/", help="Path directory in Firebase storage")
+    list_parser.add_argument("--expire", dest="expire", type=int,
+                             help="List only files that modifier more than expire days")
+
+    args = parser.parse_args()
+
     fire = FireUp()
 
     if args.command == 'upload':
-        fire.upload(origin=args.origin, dest=args.dest)
+        fire.upload(origin=args.origin, dest=args.dest, chunk=args.chunk, return_stdout=args.stdout)
     if args.command == 'list':
         list = fire.list(path=args.path, expire=args.expire)
         for l in list:
