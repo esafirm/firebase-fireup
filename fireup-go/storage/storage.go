@@ -35,33 +35,26 @@ func initializeIfNeeded() {
 		return
 	}
 
+	bucketFromEnv := os.Getenv("FIREUP_BUCKET")
+	saFromEnv := os.Getenv("FIREUP_SERVICE_ACCOUNT")
+
 	// get environment variables
 	configPath := os.Getenv("FIREUP_CONFIG")
-	if configPath == "" {
+	if configPath == "" && (bucketFromEnv == "" || saFromEnv == "") {
 		fmt.Println("Environment variable FIREUP_CONFIG is not set")
+		fmt.Println("FIREBASE_BUCKET:", bucketFromEnv)
+		fmt.Println("FIREBASE_SERVICE_ACCOUNT:", saFromEnv)
 		os.Exit(ERROR_CODE_INIT)
 	}
 
-	// open file from config
-	file, err := os.Open(configPath)
-	if err != nil {
-		fmt.Println("Error opening config file:", err)
-		os.Exit(ERROR_CODE_INIT)
-	}
-	defer file.Close()
-
-	// File to string
-	fileString, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Println("Error reading config file:", err)
-		os.Exit(ERROR_CODE_INIT)
-	}
-
-	var configObject = Config{}
-	err = json.Unmarshal(fileString, &configObject)
-	if err != nil {
-		fmt.Println("Error parsing config file:", err)
-		os.Exit(ERROR_CODE_INIT)
+	var configObject Config
+	if configPath != "" {
+		configObject = getConfigFromFile(configPath)
+	} else {
+		configObject = Config{
+			Bucket:             bucketFromEnv,
+			ServiceAccountPath: saFromEnv,
+		}
 	}
 
 	// Assign for later use
@@ -90,6 +83,32 @@ func initializeIfNeeded() {
 		os.Exit(ERROR_CODE_INIT)
 	}
 
+}
+
+func getConfigFromFile(configPath string) Config {
+	// open file from config
+	file, err := os.Open(configPath)
+	if err != nil {
+		fmt.Println("Error opening config file:", err)
+		os.Exit(ERROR_CODE_INIT)
+	}
+	defer file.Close()
+
+	// File to string
+	fileString, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println("Error reading config file:", err)
+		os.Exit(ERROR_CODE_INIT)
+	}
+
+	var configObject = Config{}
+	err = json.Unmarshal(fileString, &configObject)
+	if err != nil {
+		fmt.Println("Error parsing config file:", err)
+		os.Exit(ERROR_CODE_INIT)
+	}
+
+	return configObject
 }
 
 func Upload(origin string, dest string, returnStdout bool) {

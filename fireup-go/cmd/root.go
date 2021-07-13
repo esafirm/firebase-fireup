@@ -18,14 +18,6 @@ var rootCmd = &cobra.Command{
 	Long:  `Fireup is CLI tool to upload files to Firebase storage with minimal config`,
 	Args:  cobra.MaximumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-
-		// get environment variables
-		config := os.Getenv("FIREUP_CONFIG")
-		if config == "" {
-			fmt.Println("Environment variable FIREUP_CONFIG is not set")
-			os.Exit(1)
-		}
-
 		storage.Upload(origin, dest, returnStdout)
 	},
 }
