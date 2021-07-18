@@ -1,3 +1,5 @@
+![OSS Fireup](https://user-images.githubusercontent.com/1691440/126067630-ac91d5ea-fbe0-4088-981a-87c7b3c94efd.gif)
+
 ## Firebase Fireup 
 
 > Simple library and CLI tools to upload your files to Firebase storage.
